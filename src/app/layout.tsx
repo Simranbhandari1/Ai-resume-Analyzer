@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import LoginPage from "./signIn/page";
+import SignupPage from "./signUp/page";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -30,7 +32,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        {/* {children} */}
+        <LoginPage/>
+        <SignupPage/>
+        
       </body>
     </html>
   );

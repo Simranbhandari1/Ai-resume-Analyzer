@@ -1,18 +1,17 @@
 "use client"
 
-import LoginForm from "./LoginForm"
-import LoginFeatures from "./LoginFeature"
 
+import LoginFeatures from "../signIn/LoginFeature"
+import SignupForm from "./SignUpForm"
 
-
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <div className="min-h-screen grid grid-cols-2">
 
       <LoginFeatures />
 
       <div className="flex items-center justify-center bg-white">
-        <LoginForm />
+        <SignupForm />
       </div>
 
     </div>
