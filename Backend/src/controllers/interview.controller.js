@@ -14,21 +14,39 @@ async function generateInterViewReportController(req, res) {
     jobDescription: req.body.jobDescription,
     resumeFile: req.file ? req.file.originalname : null,
   });
-  const resumeContent = await new pdfParse.PDFParse(
-    Uint8Array.from(req.file.buffer),
-  ).getText();
+  let resumeText = '';
+
+  if (req.file) {
+    const resumeContent = await new pdfParse.PDFParse(
+      Uint8Array.from(req.file.buffer),
+    ).getText();
+
+    resumeText = resumeContent.text;
+  }
 
   const { selfDescription, jobDescription } = req.body;
 
+  if (!jobDescription) {
+    return res.status(400).json({
+      message: 'Job description is required.',
+    });
+  }
+
+  if (!req.file && !selfDescription?.trim()) {
+    return res.status(400).json({
+      message: 'Please upload a resume or enter a self description.',
+    });
+  }
   const interViewReportByAi = await generateInterviewReport({
-    resume: resumeContent.text,
+    // resume: resumeContent.text,
+    resume: resumeText,
     selfDescription,
     jobDescription,
   });
 
   const interviewReport = await interviewReportModel.create({
     user: req.user.id,
-    resume: resumeContent.text,
+    resume: resumeText,
     selfDescription,
     jobDescription,
     ...interViewReportByAi,
