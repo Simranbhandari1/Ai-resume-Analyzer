@@ -10,7 +10,6 @@ const tokenBlacklistModel = require('../models/blacklist.model');
  */
 async function registerUserController(req, res) {
   const { username, email, password } = req.body;
-  console.log('Registering user:', { username, email });
 
   if (!username || !email || !password) {
     return res.status(400).json({

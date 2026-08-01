@@ -27,14 +27,14 @@ const Home = () => {
     const jobDescriptionWords = countWords(jobDescription);
     const selfDescriptionWords = countWords(selfDescription);
 
-    if (jobDescriptionWords < 50) {
-      toast.error('Job description must contain at least 50 words.');
+    if (jobDescriptionWords < 100) {
+      toast.error('Job description must contain at least 100 words.');
       return;
     }
 
-    if (!resumeFile && selfDescriptionWords < 50) {
+    if (!resumeFile && selfDescriptionWords < 100) {
       toast.error(
-        'Please upload a resume or write at least 50 words about yourself.',
+        'Please upload a resume or write at least 100 words about yourself.',
       );
       return;
     }
