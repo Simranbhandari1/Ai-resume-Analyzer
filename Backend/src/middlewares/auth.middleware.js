@@ -1,43 +1,73 @@
-const jwt = require("jsonwebtoken")
-const tokenBlacklistModel = require("../models/blacklist.model")
+const jwt = require('jsonwebtoken');
+const tokenBlacklistModel = require('../models/blacklist.model');
 
+// async function authUser(req, res, next) {
 
+//     const token = req.cookies.token
 
+//     if (!token) {
+//         return res.status(401).json({
+//             message: "Token not provided."
+//         })
+//     }
+
+//     const isTokenBlacklisted = await tokenBlacklistModel.findOne({
+//         token
+//     })
+
+//     if (isTokenBlacklisted) {
+//         return res.status(401).json({
+//             message: "token is invalid"
+//         })
+//     }
+
+//     try {
+//         const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+//         req.user = decoded
+
+//         next()
+
+//     } catch (err) {
+
+//         return res.status(401).json({
+//             message: "Invalid token."
+//         })
+//     }
+
+// }
 async function authUser(req, res, next) {
+  console.log('===== AUTH MIDDLEWARE =====');
+  console.log('Cookies:', req.cookies);
+  console.log('Cookie Header:', req.headers.cookie);
 
-    const token = req.cookies.token
+  const token = req.cookies.token;
 
-    if (!token) {
-        return res.status(401).json({
-            message: "Token not provided."
-        })
-    }
+  if (!token) {
+    console.log('❌ No token');
+    return res.status(401).json({
+      message: 'Token not provided.',
+    });
+  }
 
-    const isTokenBlacklisted = await tokenBlacklistModel.findOne({
-        token
-    })
+  console.log('✅ Token received');
 
-    if (isTokenBlacklisted) {
-        return res.status(401).json({
-            message: "token is invalid"
-        })
-    }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    console.log('✅ Token verified');
+    console.log(decoded);
 
-        req.user = decoded
+    req.user = decoded;
 
-        next()
+    next();
+  } catch (err) {
+    console.log('❌ JWT Verify Error:', err.message);
 
-    } catch (err) {
-
-        return res.status(401).json({
-            message: "Invalid token."
-        })
-    }
-
+    return res.status(401).json({
+      message: 'Invalid token.',
+    });
+  }
 }
 
-
-module.exports = { authUser }
+module.exports = { authUser };

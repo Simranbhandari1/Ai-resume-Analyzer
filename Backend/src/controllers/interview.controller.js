@@ -10,6 +10,7 @@ const interviewReportModel = require('../models/interviewReport.model');
  */
 async function generateInterViewReportController(req, res) {
   try {
+    console.log('✅ Interview controller reached');
     console.log('Generating interview report with:', {
       selfDescription: req.body.selfDescription,
       jobDescription: req.body.jobDescription,
