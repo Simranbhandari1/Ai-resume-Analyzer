@@ -7,16 +7,23 @@ app.use((req, res, next) => {
   console.log('REQUEST:', req.method, req.originalUrl);
   next();
 });
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
+// app.use(
+//   cors({
+//     origin:
+//       // [
+//       //   'http://localhost:5173',
+//       'https://ai-resume-analyzer-smoky-eight.vercel.app',
+//     //   'https://ai-resume-analyzer-7aw9co234-simrans-projects-654e77f7.vercel.app',
+//     // ],
+//     credentials: true,
+//   }),
+// );
 app.use(
   cors({
-    origin:
-      // [
-      //   'http://localhost:5173',
-      'https://ai-resume-analyzer-smoky-eight.vercel.app',
-    //   'https://ai-resume-analyzer-7aw9co234-simrans-projects-654e77f7.vercel.app',
-    // ],
+    origin: 'https://ai-resume-analyzer-smoky-eight.vercel.app',
     credentials: true,
   }),
 );
