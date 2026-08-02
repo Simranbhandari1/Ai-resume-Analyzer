@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
+import RegisterSkeleton from '../components/RegisterSkeleton';
 
 const Register = () => {
   const { loading, handleRegister } = useAuth();
@@ -23,7 +23,8 @@ const Register = () => {
   if (loading) {
     return (
       <main>
-        <h1>Loading.......</h1>
+        {/* <h1>Loading.......</h1> */}
+        <RegisterSkeleton />
       </main>
     );
   }
