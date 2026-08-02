@@ -9,55 +9,64 @@ const interviewReportModel = require('../models/interviewReport.model');
  * @description Controller to generate interview report based on user self description, resume and job description.
  */
 async function generateInterViewReportController(req, res) {
-  console.log('Generating interview report with:', {
-    selfDescription: req.body.selfDescription,
-    jobDescription: req.body.jobDescription,
-    resumeFile: req.file ? req.file.originalname : null,
-  });
-  let resumeText = '';
+  try {
+    console.log('Generating interview report with:', {
+      selfDescription: req.body.selfDescription,
+      jobDescription: req.body.jobDescription,
+      resumeFile: req.file ? req.file.originalname : null,
+    });
 
-  if (req.file) {
-    const resumeContent = await new pdfParse.PDFParse(
-      Uint8Array.from(req.file.buffer),
-    ).getText();
+    let resumeText = '';
 
-    resumeText = resumeContent.text;
-  }
+    if (req.file) {
+      const resumeContent = await new pdfParse.PDFParse(
+        Uint8Array.from(req.file.buffer),
+      ).getText();
 
-  const { selfDescription, jobDescription } = req.body;
+      resumeText = resumeContent.text;
+    }
 
-  if (!jobDescription) {
-    return res.status(400).json({
-      message: 'Job description is required.',
+    const { selfDescription, jobDescription } = req.body;
+
+    if (!jobDescription) {
+      return res.status(400).json({
+        message: 'Job description is required.',
+      });
+    }
+
+    if (!req.file && !selfDescription?.trim()) {
+      return res.status(400).json({
+        message: 'Please upload a resume or enter a self description.',
+      });
+    }
+    const interViewReportByAi = await generateInterviewReport({
+      // resume: resumeContent.text,
+      resume: resumeText,
+      selfDescription,
+      jobDescription,
+    });
+
+    const interviewReport = await interviewReportModel.create({
+      user: req.user.id,
+      resume: resumeText,
+      selfDescription,
+      jobDescription,
+      ...interViewReportByAi,
+    });
+
+    res.status(201).json({
+      message: 'Interview report generated successfully.',
+
+      interviewReport,
+    });
+    console.log('Interview report generated:', interviewReport);
+  } catch (error) {
+    console.error('ERROR:', error);
+    return res.status(500).json({
+      message: error.message,
+      stack: error.stack,
     });
   }
-
-  if (!req.file && !selfDescription?.trim()) {
-    return res.status(400).json({
-      message: 'Please upload a resume or enter a self description.',
-    });
-  }
-  const interViewReportByAi = await generateInterviewReport({
-    // resume: resumeContent.text,
-    resume: resumeText,
-    selfDescription,
-    jobDescription,
-  });
-
-  const interviewReport = await interviewReportModel.create({
-    user: req.user.id,
-    resume: resumeText,
-    selfDescription,
-    jobDescription,
-    ...interViewReportByAi,
-  });
-
-  res.status(201).json({
-    message: 'Interview report generated successfully.',
-
-    interviewReport,
-  });
-  console.log('Interview report generated:', interviewReport);
 }
 
 /**

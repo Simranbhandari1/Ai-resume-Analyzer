@@ -48,7 +48,7 @@ async function registerUserController(req, res) {
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000,
   });
-
+  console.log('NODE_ENV:', process.env.NODE_ENV);
   res.status(201).json({
     message: 'User registered successfully',
     user: {
