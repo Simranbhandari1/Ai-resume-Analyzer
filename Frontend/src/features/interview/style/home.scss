@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 // ── Variables ────────────────────────────────────────────────────────────────
 $bg-page: #0d1117;
 $bg-card: #161b22;
@@ -17,7 +17,7 @@ $font-stack:
   system-ui,
   -apple-system,
   BlinkMacSystemFont,
-  "Segoe UI",
+  'Segoe UI',
   Roboto,
   sans-serif;
 
@@ -258,7 +258,7 @@ $font-stack:
 
   &::before,
   &::after {
-    content: "";
+    content: '';
     flex: 1;
     height: 1px;
     background-color: $border-color;
@@ -384,4 +384,16 @@ $font-stack:
       color: $text-primary;
     }
   }
+}
+
+.textarea-wrapper {
+  position: relative;
+}
+
+.textarea-wrapper .char-counter {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-size: 0.75rem;
+  color: $text-muted;
 }

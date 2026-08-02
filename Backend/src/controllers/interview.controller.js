@@ -1,4 +1,5 @@
 const pdfParse = require('pdf-parse');
+const mammoth = require('mammoth');
 const {
   generateInterviewReport,
   generateResumePdf,
@@ -20,11 +21,26 @@ async function generateInterViewReportController(req, res) {
     let resumeText = '';
 
     if (req.file) {
-      const resumeContent = await new pdfParse.PDFParse(
-        Uint8Array.from(req.file.buffer),
-      ).getText();
+      if (req.file.mimetype === 'application/pdf') {
+        const resumeContent = await new pdfParse.PDFParse(
+          Uint8Array.from(req.file.buffer),
+        ).getText();
 
-      resumeText = resumeContent.text;
+        resumeText = resumeContent.text;
+      } else if (
+        req.file.mimetype ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      ) {
+        const result = await mammoth.extractRawText({
+          buffer: req.file.buffer,
+        });
+
+        resumeText = result.value;
+      } else {
+        return res.status(400).json({
+          message: 'Only PDF and DOCX files are supported.',
+        });
+      }
     }
 
     const { selfDescription, jobDescription } = req.body;

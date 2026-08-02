@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 import ReportSkeleton from '../../auth/components/ReportSkeleton';
 import HomeSkeleton from '../../auth/components/HomePageSkeleton.jsx';
+import { useAuth } from '../../auth/hooks/useAuth';
 
 const Home = () => {
   const { loading, generating, generateReport, reports } = useInterview();
   const [jobDescription, setJobDescription] = useState('');
   const [selfDescription, setSelfDescription] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const { user } = useAuth();
 
   const resumeInputRef = useRef();
 
@@ -111,14 +113,16 @@ const Home = () => {
               <span className="badge badge--required">Required</span>
             </div>
             <textarea
-              onChange={(e) => {
-                setJobDescription(e.target.value);
-              }}
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
               className="panel__textarea"
               placeholder={`Paste the full job description here...\ne.g. 'Senior Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
               maxLength={5000}
             />
-            <div className="char-counter">0 / 5000 chars</div>
+            <div className="char-counter">
+              {' '}
+              {countWords(jobDescription)} / 100 words
+            </div>
           </div>
 
           {/* Vertical Divider */}
@@ -126,7 +130,7 @@ const Home = () => {
 
           {/* Right Panel - Profile */}
           <div className="panel panel--right">
-            {/* <div className="panel__header">
+            <div className="panel__header">
               <span className="panel__icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -143,8 +147,8 @@ const Home = () => {
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               </span>
-              <h2>Your Profile</h2>
-            </div> */}
+              <h2>{user?.username || 'Your Profile'}</h2>
+            </div>
 
             {/* Upload Resume */}
             <div className="upload-section">
@@ -219,21 +223,44 @@ const Home = () => {
             </div>
 
             {/* Quick Self-Description */}
-            <div className="self-description">
+            {/* <div className="self-description">
               <label className="section-label" htmlFor="selfDescription">
                 Quick Self-Description
               </label>
               <textarea
-                onChange={(e) => {
-                  setSelfDescription(e.target.value);
-                }}
+                value={selfDescription}
+                onChange={(e) => setSelfDescription(e.target.value)}
                 id="selfDescription"
                 name="selfDescription"
                 className="panel__textarea panel__textarea--short"
                 placeholder="Briefly describe your experience, key skills, and years of experience if you don't have a resume handy..."
               />
-            </div>
+              <div className="char-counter">
+                {' '}
+                {countWords(jobDescription)} / 100 words
+              </div>
+            </div> */}
 
+            <div className="self-description">
+              <label className="section-label" htmlFor="selfDescription">
+                Quick Self-Description
+              </label>
+
+              <div className="textarea-wrapper">
+                <textarea
+                  value={selfDescription}
+                  onChange={(e) => setSelfDescription(e.target.value)}
+                  id="selfDescription"
+                  name="selfDescription"
+                  className="panel__textarea panel__textarea--short"
+                  placeholder="Briefly describe your experience, key skills, and years of experience if you don't have a resume handy..."
+                />
+
+                <div className="char-counter">
+                  {countWords(selfDescription)} / 100 words
+                </div>
+              </div>
+            </div>
             {/* Info Box */}
             <div className="info-box">
               <span className="info-box__icon">

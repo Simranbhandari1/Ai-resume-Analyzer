@@ -48,7 +48,7 @@ async function registerUserController(req, res) {
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000,
   });
-  console.log('NODE_ENV:', process.env.NODE_ENV);
+
   res.status(201).json({
     message: 'User registered successfully',
     user: {
@@ -90,19 +90,19 @@ async function loginUserController(req, res) {
   );
 
   // res.cookie('token', token);
-  // res.cookie('token', token, {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV === 'production',
-  //   sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  //   maxAge: 24 * 60 * 60 * 1000,
-  // });
   res.cookie('token', token, {
     httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-    path: '/',
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000,
   });
+  // res.cookie('token', token, {
+  //   httpOnly: true,
+  //   secure: true,
+  //   sameSite: 'none',
+  //   path: '/',
+  //   maxAge: 24 * 60 * 60 * 1000,
+  // });
   res.status(200).json({
     message: 'User loggedIn successfully.',
     user: {

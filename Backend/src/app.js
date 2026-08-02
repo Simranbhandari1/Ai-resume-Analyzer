@@ -3,11 +3,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 const app = express();
-// app.use((req, res, next) => {
-//   console.log('REQUEST:', req.method, req.originalUrl);
-//   next();
-// });
-app.set('trust proxy', 1);
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(

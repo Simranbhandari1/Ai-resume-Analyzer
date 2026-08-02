@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../style/interview.scss';
 import { useInterview } from '../hooks/useInterview.js';
-import { useNavigate, useParams } from 'react-router';
-import Loader from '../../auth/components/Loader.jsx';
-
+import { useParams } from 'react-router';
+import LottieLoader from '../../auth/components/LottieLoader.jsx';
 const NAV_ITEMS = [
   {
     id: 'technical',
@@ -142,8 +141,7 @@ const Interview = () => {
   if (loading || !report) {
     return (
       <main className="loading-screen">
-        {/* <h1>Loading your interview plan...</h1> */}
-        {/* <Loader /> */}
+        <LottieLoader />
       </main>
     );
   }
@@ -195,6 +193,7 @@ const Interview = () => {
         <div className="interview-divider" />
 
         {/* ── Center Content ── */}
+
         <main className="interview-content">
           {activeNav === 'technical' && (
             <section>
